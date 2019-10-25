@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/dongggcom/compose-html#readme",
   "dependencies": {
+    "commander": "^3.0.2",
     "etag": "^1.8.1",
     "lodash": "^4.17.15",
     "mime": "^2.4.4",

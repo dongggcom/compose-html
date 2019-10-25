@@ -4,7 +4,7 @@
 const { getRootPath } = require('./lib/utils')
 const path = require('path');
 const program = require('commander')
-const base = require('../../../package.json')
+const base = require(`${getRootPath()}/package.json`)
 
 // 版本
 program.version(base.version)
