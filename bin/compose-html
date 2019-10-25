@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict'
 
-const { getRootPath } = require('./lib/utils')
+const { getRootPath } = require('../lib/utils')
 const path = require('path');
 const program = require('commander')
 const base = require(`${getRootPath()}/package.json`)
@@ -14,7 +14,7 @@ program
   // .option('-q, --quite <quite>', 'run server quitely')
   .description('启动服务器')
   .action(() => {
-    require('./scripts/server')
+    require('../scripts/server')
   })
 
 program
@@ -24,7 +24,7 @@ program
   .action(({ output }) => {
     const OUTPUT_PATH = output ? path.join(getRootPath(), output): `${getRootPath()}/output/`
     process.env.OUTPUT_PATH = OUTPUT_PATH
-    require('./scripts/build')({ output: OUTPUT_PATH })
+    require('../scripts/build')({ output: OUTPUT_PATH })
   })
 
 // 开始解析用户输入的命令

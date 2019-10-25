@@ -4,12 +4,13 @@
   "description": "compose html by node ",
   "main": "index.js",
   "bin": {
-    "cli": "./cli"
+    "compose-html": "./bin/compose-html"
   },
   "directories": {
     "lib": "lib"
   },
   "scripts": {
+    "start": "node ./cli start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
