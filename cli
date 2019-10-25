@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+'use strict'
+
+const { getRootPath } = require('./lib/utils')
+const path = require('path');
+const program = require('commander')
+const base = require('../../../package.json')
+
+// 版本
+program.version(base.version)
+
+program
+  .command('start')
+  // .option('-q, --quite <quite>', 'run server quitely')
+  .description('启动服务器')
+  .action(() => {
+    require('./scripts/server')
+  })
+
+program
+  .command('build')
+  .option('-O, --output <output>', 'build files')
+  .description('编译文件')
+  .action(({ output }) => {
+    const OUTPUT_PATH = output ? path.join(getRootPath(), output): `${getRootPath()}/output/`
+    process.env.OUTPUT_PATH = OUTPUT_PATH
+    require('./scripts/build')({ output: OUTPUT_PATH })
+  })
+
+// 开始解析用户输入的命令
+program.parse(process.argv) 
