@@ -1,0 +1,35 @@
+{
+  "name": "compose-html",
+  "version": "0.1.0",
+  "description": "compose html by node ",
+  "main": "index.js",
+  "bin": {
+    "cli": "./cli"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dongggcom/compose-html.git"
+  },
+  "keywords": [
+    "compose-html",
+    "html"
+  ],
+  "author": "dongmin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dongggcom/compose-html/issues"
+  },
+  "homepage": "https://github.com/dongggcom/compose-html#readme",
+  "dependencies": {
+    "etag": "^1.8.1",
+    "lodash": "^4.17.15",
+    "mime": "^2.4.4",
+    "tcp-port-used": "^1.0.1"
+  }
+}
