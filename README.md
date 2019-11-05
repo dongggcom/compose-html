@@ -2,17 +2,17 @@
 
 #### 是否运行成功
 ```Bash
-node cli --version
+compose-html --version
 ```
 
 #### 启动server 
 ```Bash
-node cli start
+compose-html start
 ```
 
 #### 构建
 ```Bash
-node cli build
+compose-html build
 ```
 
 #### 描述

@@ -28,7 +28,7 @@ const createServer = (port) => http.createServer((req, res, next)=>{
   }, ()=> {
     send.success(HostNotFound)
   })
-  // 超时相应
+  // 超时响应
   setTimeout(function() {
     timeout_fn();
   }, 3000);
