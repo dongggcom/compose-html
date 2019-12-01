@@ -19,3 +19,9 @@ compose-html build
 
 * 所有的模板路径都是由根目录出发
 * 默认读取的文件路径为跟目录的 index.html
+
+### 简单样例
+
+```Bash
+bin/compose-html start --root demo
+```

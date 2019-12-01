@@ -1,20 +1,23 @@
 #!/usr/bin/env node
 'use strict'
 
-const { getRootPath } = require('../lib/utils')
+const { getRootPath, getDirectSplit } = require('../lib/utils')
 const path = require('path');
 const program = require('commander')
 const base = require(`${getRootPath()}/package.json`)
+const SPLIT = getDirectSplit()
 
 // 版本
 program.version(base.version)
 
 program
   .command('start')
-  // .option('-q, --quite <quite>', 'run server quitely')
+  .option('-R, --root <root>', 'set root direction')
   .description('启动服务器')
-  .action(() => {
-    require('../scripts/server')
+  .action(({ root }) => {
+    const ROOT_PATH = root ? path.join(getRootPath(), root): getRootPath()
+    process.env.ROOT_PATH = ROOT_PATH
+    require('../scripts/server')({ root })
   })
 
 program
@@ -22,7 +25,7 @@ program
   .option('-O, --output <output>', 'build files')
   .description('编译文件')
   .action(({ output }) => {
-    const OUTPUT_PATH = output ? path.join(getRootPath(), output): `${getRootPath()}/output/`
+    const OUTPUT_PATH = output ? path.join(getRootPath(), output): `${getRootPath()}${SPLIT}output${SPLIT}`
     process.env.OUTPUT_PATH = OUTPUT_PATH
     require('../scripts/build')({ output: OUTPUT_PATH })
   })
