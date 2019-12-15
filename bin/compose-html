@@ -12,17 +12,18 @@ program.version(base.version)
 
 program
   .command('start')
+  .option('--watch', 'watching diretion changes')
   .option('-R, --root <root>', 'set root direction')
   .description('启动服务器')
-  .action(({ root }) => {
+  .action(({ root, watch }) => {
     const ROOT_PATH = root ? path.join(getRootPath(), root): getRootPath()
     process.env.ROOT_PATH = ROOT_PATH
-    require('../scripts/server')({ root })
+    require('../scripts/server')({ root, watch })
   })
 
 program
   .command('build')
-  .option('-O, --output <output>', 'build files')
+  .option('--output <output>', 'build files')
   .description('编译文件')
   .action(({ output }) => {
     const OUTPUT_PATH = output ? path.join(getRootPath(), output): `${getRootPath()}${SPLIT}output${SPLIT}`

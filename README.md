@@ -23,5 +23,16 @@ compose-html build
 ### 简单样例
 
 ```Bash
+# 以demo为项目根目录
 bin/compose-html start --root demo
 ```
+
+```Bash
+# 以dist为输出目录
+bin/compose-html build --output dist
+```
+
+### 环境变量
+
+* ROOT_PATH 项目的根目录路径
+* OUTPUT_PATH 项目的输出路径
