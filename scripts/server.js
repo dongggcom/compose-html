@@ -24,12 +24,16 @@ const createServer = (port, options) => http.createServer((req, res, next)=>{
         timeout_fn = function() {
           reject();
         };
-    }) ]).then((html)=>{
-      if( router.isEmptyHtml(html) ){
-        send.notFound()
+    }) ]).then((source)=>{
+      if( router.isHtml(source) && router.isEmptyHtml(source) ){
+        return send.notFound()
       }
-      send.success(html, router.filepath);
-    }, ()=> {
+      if( router.isBinary(source) ){
+        return send.success(source, router.filepath);
+      }
+      send.success(source, router.filepath);
+    }, (...r)=> {
+      console.log(r)
       send.success(HostNotFound)
     })
     // 超时响应
