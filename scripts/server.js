@@ -10,7 +10,7 @@ const { HostNotFound } = require('../lib/context')
 const includeMiddleware = require('../middleware/include');
 const IP = getIP();
 
-const createServer = (port, options) => http.createServer((req, res, next)=>{
+const createServer = (port, options) => http.createServer((req, res)=>{
   const { watch } = options
 
   function running() {
@@ -56,7 +56,6 @@ const createServer = (port, options) => http.createServer((req, res, next)=>{
     watcher.start()
   }
 
-  
 }).listen(port, ()=>{
   console.log(`server start: http://${IP}:${port}`)
 });

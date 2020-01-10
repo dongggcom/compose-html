@@ -18,7 +18,7 @@ program
   .action(({ root, watch }) => {
     const ROOT_PATH = root ? path.join(getRootPath(), root): getRootPath()
     process.env.ROOT_PATH = ROOT_PATH
-    require('../scripts/server')({ root, watch })
+    require('../scripts/server')({ watch })
   })
 
 program

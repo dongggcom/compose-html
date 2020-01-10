@@ -9,10 +9,13 @@ const PLACEHOLDER_PATTERN = /@\[\s*placeholder\s*\]/g;
 
 const placeholderHtml = function (html, placeholder) {
   const c = new RegExp(PLACEHOLDER_PATTERN).exec(html)
-  if( placeholder ){
-    return html.replace(c[0], placeholder)
+  if( c ) {
+    if( placeholder ){
+      return html.replace(c[0], placeholder)
+    }
+    return html.replace(c[0], "")
   }
-  return html.replace(c[0], "")
+  return html;
 }
 
 const includeHtml = async function (html) {
