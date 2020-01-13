@@ -32,6 +32,11 @@ bin/compose-html start --root demo
 bin/compose-html build --output dist
 ```
 
+```Bash
+# 指定打包的源
+bin/compose-html build --output dist --root demo
+```
+
 ### 环境变量
 
 * ROOT_PATH 项目的根目录路径
