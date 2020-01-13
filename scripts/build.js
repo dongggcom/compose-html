@@ -1,7 +1,7 @@
 const { resolve } = require('path')
 const fs = require('fs')
 const { writeFile, existsSync, mkdirSync, unlinkSync, rmdirSync } = fs
-const { getRootPath, parseItem, memorizeDirReadList } = require('../lib/utils')
+const { getRootPath, parseItem, memorizeDirReadList, isImgFile } = require('../lib/utils')
 const includeMiddleware  = require('../middleware/include')
 const router = require('../lib/Router')()
 const rootPath = getRootPath()
@@ -58,19 +58,30 @@ module.exports = ({ output, root }) => {
         return list.map(v => {
           const { path } = parseItem(v)
           const outputPath = _replaceRootpath(path, _root, output)
-          const html = router.render(path)
-          return { [outputPath]: html }
+          if(isImgFile(outputPath)){
+            return { [outputPath]: fs.createReadStream(path) }
+          }else{
+            const html = router.render(path)
+            return { [outputPath]: html }
+          }
         })
       })
       .then((list) => {
         list.forEach( async (v)=>{
           const { path: outputPath, value } = parseItem(v)
-          const html = await value;
-          writeFile(outputPath, html, (err) => {
-            if (err) {
-              console.trace(err)
-            } 
-          })  
+          const needBinary = isImgFile(outputPath)
+          if( needBinary ){
+            let readStream = value
+            let writeStream = fs.createWriteStream(outputPath)
+            readStream.pipe(writeStream)
+          }else {
+            const html = await value;
+            writeFile(outputPath, html, (err) => {
+              if (err) {
+                console.trace(err)
+              } 
+            })  
+          }
         })
 
       }).catch(err=>console.warn(`read direction in error: ${err}`))
