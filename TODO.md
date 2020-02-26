@@ -9,6 +9,6 @@
   [x] 遍历根目录所有文件
 [] 内置 babel
 [] 插件的生命周期：注册模式，利用数组储存？
-[] 流(Steam)改善内存使用？-> 针对图片
-[] 增加配置文件 .compose.js
+[x] 流(Steam)改善内存使用？-> 针对图片
+[] 增加配置文件 .compose.config.js/.compose.config.json
   [] 增加代理 proxy

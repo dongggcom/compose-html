@@ -4,19 +4,17 @@ const {
   getIP,
   getPort, 
   browse,
-  getRootPath,
 } = require('../lib/utils');
 const { HostNotFound } = require('../lib/context')
 const includeMiddleware = require('../middleware/include');
 const IP = getIP();
 
 const createServer = (port, options) => http.createServer((req, res)=>{
-  const { watch } = options
 
   function running() {
     const router = require('../lib/Router')(req, options);
     const send = require('../lib/Send')(req, res);
-    // 中间件
+    // 为router注册中间件
     router.registerMiddleware(includeMiddleware)
 
     let timeout_fn = null;
@@ -43,18 +41,6 @@ const createServer = (port, options) => http.createServer((req, res)=>{
   }
 
   running()
-
-  // const { ROOT_PATH } = process.env;
-  // 监听
-  if( watch ){
-    const watcher = require('../lib/Watch')(getRootPath(), {
-      // 重启服务
-      onProcess(){
-        // console.log('onProcess',file, flies)
-      }
-    })
-    watcher.start()
-  }
 
 }).listen(port, ()=>{
   console.log(`server start: http://${IP}:${port}`)

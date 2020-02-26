@@ -7,18 +7,28 @@ const program = require('commander')
 const base = require('../package.json')
 const SPLIT = getDirectSplit()
 
+function exportEnvRoot(dir) {
+  const ROOT_PATH = root ? path.join(getRootPath(), dir): getRootPath()
+  process.env.ROOT_PATH = ROOT_PATH
+  return ROOT_PATH
+}
+
+function exportEnvOutput(dir) {
+  const OUTPUT_PATH = output ? path.join(getRootPath(), dir): `${getRootPath()}${SPLIT}output${SPLIT}`
+  process.env.OUTPUT_PATH = OUTPUT_PATH
+  return OUTPUT_PATH
+}
+
 // 版本
 program.version(base.version)
 
 program
   .command('start')
-  .option('--watch', 'watching diretion changes')
   .option('-R, --root <root>', 'set root direction')
   .description('启动服务器')
-  .action(({ root, watch }) => {
-    const ROOT_PATH = root ? path.join(getRootPath(), root): getRootPath()
-    process.env.ROOT_PATH = ROOT_PATH
-    require('../scripts/server')({ watch })
+  .action(({ root }) => {
+    exportEnvRoot(root)
+    require('../scripts/server')()
   })
 
 program
@@ -27,10 +37,8 @@ program
   .option('--output <output>', 'build files')
   .description('编译文件')
   .action(({ output, root }) => {
-    const ROOT_PATH = root ? path.join(getRootPath(), root): getRootPath()
-    process.env.ROOT_PATH = ROOT_PATH
-    const OUTPUT_PATH = output ? path.join(getRootPath(), output): `${getRootPath()}${SPLIT}output${SPLIT}`
-    process.env.OUTPUT_PATH = OUTPUT_PATH
+    const ROOT_PATH = exportEnvRoot(root)
+    const OUTPUT_PATH = exportEnvOutput(output)
     require('../scripts/build')({ output: OUTPUT_PATH, root: ROOT_PATH })
   })
 
