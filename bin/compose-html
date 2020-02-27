@@ -3,6 +3,7 @@
 
 const { getRootPath, getDirectSplit } = require('../lib/utils')
 const path = require('path');
+const fs = require('fs');
 const program = require('commander')
 const base = require('../package.json')
 const SPLIT = getDirectSplit()
@@ -19,6 +20,28 @@ function exportEnvOutput(dir) {
   return OUTPUT_PATH
 }
 
+function exportEnvConfig(path) {
+  function setEnv (p) {
+    try {
+      const CONFIG = require(p)
+      process.env.CONFIG = CONFIG
+    } catch (e) {
+      console.error(`set config env error`, e)
+    }
+  }
+  if (fs.existsSync(path) && fs.statSync(path).isFile()) {
+    setEnv(path)
+  } else if(fs.existsSync(path) && fs.statSync(path).isDirectory()) {
+    const pathJSON = path + SPLIT + '.compose.config.json';
+    const pathJS = path + SPLIT + '.compose.config.js';
+    if (fs.existsSync(pathJSON) && fs.statSync(pathJSON).isFile()) {
+      setEnv(pathJSON)
+    } else if(fs.existsSync(pathJS) && fs.statSync(pathJS).isFile()) {
+      setEnv(pathJS)
+    }
+  }
+}
+
 // 版本
 program.version(base.version)
 
@@ -27,8 +50,9 @@ program
   .option('-R, --root <root>', 'set root direction')
   .description('启动服务器')
   .action(({ root }) => {
-    exportEnvRoot(root)
-    require('../scripts/server')()
+    const ROOT_PATH = exportEnvRoot(root)
+    exportEnvConfig(ROOT_PATH)
+    // require('../scripts/server')()
   })
 
 program
