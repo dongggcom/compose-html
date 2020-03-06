@@ -18,32 +18,30 @@ const placeholderHtml = function (html, placeholder) {
   return html;
 }
 
-const includeHtml = async function (html) {
+// 动态引入 include 文件
+const includeHtml = function (html) {
   const c = new RegExp(INCLUDE_PATTERN).exec(html)
   if( c ){
     const includePath = resolve(this.rootpath, c[2])
-    let include = this.store.get(includePath)
-    if( !include ){
-      include = await this.store.load(includePath)
-    }
-    if( include && !_.isEmpty (include) ){
-      return html.replace(c[0], include)
-    }
+    return this.route(includePath).then(include => {
+      if( include && !_.isEmpty (include) ){
+        return html.replace(c[0], include)
+      }
+    })
   }
   return html;
 }
 
-const belongHtml = async function (html) {
+// 动态引入 belong 文件
+const belongHtml = function (html) {
   const c = new RegExp(BELONG_PATTERN).exec(html)
   if( c ){
     const belongPath = resolve(this.rootpath, c[2])
-    let belong = this.store.get(belongPath)
-    if( !belong ){
-      belong = await this.store.load(belongPath)
-    }
-    if( belong && !_.isEmpty (belong) ){
-      return placeholderHtml( belong, html.replace(c[0], ""))
-    }
+    return this.route(belongPath).then(belong => {
+      if( belong && !_.isEmpty (belong) ){
+        return placeholderHtml( belong, html.replace(c[0], ""))
+      }
+    })
   }
   return html;
 }
@@ -51,6 +49,7 @@ const belongHtml = async function (html) {
 function IncludeMiddleware (){}
 
 IncludeMiddleware.prototype.onRender = async function( html, context ){
+  // console.log('IncludeMiddleware.prototype.onRender before', typeof html)
   if( html && _.isString(html) ){
     if( html.match(PLACEHOLDER_PATTERN) ){
       html = placeholderHtml.call( context.__app__, html );
@@ -61,6 +60,7 @@ IncludeMiddleware.prototype.onRender = async function( html, context ){
     if( html.match(INCLUDE_PATTERN) ){
       html = await includeHtml.call( context.__app__, html );
     }
+    // console.log('IncludeMiddleware.prototype.onRender after', typeof html)
     return html;
   }
 }

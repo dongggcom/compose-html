@@ -9,13 +9,13 @@ const base = require('../package.json')
 const SPLIT = getDirectSplit()
 
 function exportEnvRoot(dir) {
-  const ROOT_PATH = root ? path.join(getRootPath(), dir): getRootPath()
+  const ROOT_PATH = dir ? path.join(getRootPath(), dir): getRootPath()
   process.env.ROOT_PATH = ROOT_PATH
   return ROOT_PATH
 }
 
 function exportEnvOutput(dir) {
-  const OUTPUT_PATH = output ? path.join(getRootPath(), dir): `${getRootPath()}${SPLIT}output${SPLIT}`
+  const OUTPUT_PATH = dir ? path.join(getRootPath(), dir): `${getRootPath()}${SPLIT}output${SPLIT}`
   process.env.OUTPUT_PATH = OUTPUT_PATH
   return OUTPUT_PATH
 }
@@ -24,7 +24,7 @@ function exportEnvConfig(path) {
   function setEnv (p) {
     try {
       const CONFIG = require(p)
-      process.env.CONFIG = CONFIG
+      process.env.CONFIG = JSON.stringify(CONFIG)
     } catch (e) {
       console.error(`set config env error`, e)
     }
@@ -52,7 +52,7 @@ program
   .action(({ root }) => {
     const ROOT_PATH = exportEnvRoot(root)
     exportEnvConfig(ROOT_PATH)
-    // require('../scripts/server')()
+    require('../scripts/server')()
   })
 
 program

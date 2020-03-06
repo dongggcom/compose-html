@@ -67,7 +67,7 @@ module.exports = ({ output, root }) => {
         })
       })
       .then((list) => {
-        list.forEach( async (v)=>{
+        list.forEach( async (v) => {
           const { path: outputPath, value } = parseItem(v)
           const needBinary = isImgFile(outputPath)
           if( needBinary ){
