@@ -49,7 +49,7 @@ const createServer = (port, options) => http.createServer((req, res)=>{
 
 module.exports = (options) => getPort().then(port => {
   createServer(port, options)
-  browse(port)
+  // browse(port)
 })
 
 

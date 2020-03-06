@@ -23,11 +23,8 @@ const includeHtml = function (html) {
   const c = new RegExp(INCLUDE_PATTERN).exec(html)
   if( c ){
     const includePath = resolve(this.rootpath, c[2])
-    return this.route(includePath).then(include => {
-      if( include && !_.isEmpty (include) ){
-        return html.replace(c[0], include)
-      }
-    })
+    const include = this.store.get(includePath)
+    return html.replace(c[0], include)
   }
   return html;
 }
@@ -37,30 +34,25 @@ const belongHtml = function (html) {
   const c = new RegExp(BELONG_PATTERN).exec(html)
   if( c ){
     const belongPath = resolve(this.rootpath, c[2])
-    return this.route(belongPath).then(belong => {
-      if( belong && !_.isEmpty (belong) ){
-        return placeholderHtml( belong, html.replace(c[0], ""))
-      }
-    })
+    const belong = this.store.get(belongPath)
+    return placeholderHtml( belong, html.replace(c[0], ""))
   }
   return html;
 }
 
 function IncludeMiddleware (){}
 
-IncludeMiddleware.prototype.onRender = async function( html, context ){
-  // console.log('IncludeMiddleware.prototype.onRender before', typeof html)
+IncludeMiddleware.prototype.onRender = function( html, context ){
   if( html && _.isString(html) ){
     if( html.match(PLACEHOLDER_PATTERN) ){
       html = placeholderHtml.call( context.__app__, html );
     }
     if( html.match(BELONG_PATTERN) ){
-      html = await belongHtml.call( context.__app__, html );
+      html = belongHtml.call( context.__app__, html );
     }
     if( html.match(INCLUDE_PATTERN) ){
-      html = await includeHtml.call( context.__app__, html );
+      html = includeHtml.call( context.__app__, html );
     }
-    // console.log('IncludeMiddleware.prototype.onRender after', typeof html)
     return html;
   }
 }

@@ -9,11 +9,9 @@ async function proxyHTML (html) {
 function ConfigMiddleware (){}
 
 ConfigMiddleware.prototype.onRender = async function( html, context ){
-  // console.log('ConfigMiddleware.prototype.onRender before',html && _.isString(html))
   if( html && _.isString(html) ){
     html = proxyHTML.call( context.__app__, html );
   }
-  // console.log('ConfigMiddleware.prototype.onRender after',html && _.isString(html))
   return html
 }
 
