@@ -3,20 +3,43 @@
 
 const { getRootPath, getDirectSplit } = require('../lib/utils')
 const path = require('path');
+const fs = require('fs');
 const program = require('commander')
 const base = require('../package.json')
 const SPLIT = getDirectSplit()
 
 function exportEnvRoot(dir) {
-  const ROOT_PATH = root ? path.join(getRootPath(), dir): getRootPath()
+  const ROOT_PATH = dir ? path.join(getRootPath(), dir): getRootPath()
   process.env.ROOT_PATH = ROOT_PATH
   return ROOT_PATH
 }
 
 function exportEnvOutput(dir) {
-  const OUTPUT_PATH = output ? path.join(getRootPath(), dir): `${getRootPath()}${SPLIT}output${SPLIT}`
+  const OUTPUT_PATH = dir ? path.join(getRootPath(), dir): `${getRootPath()}${SPLIT}output${SPLIT}`
   process.env.OUTPUT_PATH = OUTPUT_PATH
   return OUTPUT_PATH
+}
+
+function exportEnvConfig(path) {
+  function setEnv (p) {
+    try {
+      const CONFIG = require(p)
+      process.env.CONFIG = JSON.stringify(CONFIG)
+    } catch (e) {
+      console.error(`set config env error`, e)
+    }
+  }
+  if (fs.existsSync(path) && fs.statSync(path).isFile()) {
+    setEnv(path)
+  } else if(fs.existsSync(path) && fs.statSync(path).isDirectory()) {
+    const pathJSON = path + SPLIT + '.compose.config.json';
+    const pathJS = path + SPLIT + '.compose.config.js';
+    if (fs.existsSync(pathJSON) && fs.statSync(pathJSON).isFile()) {
+      setEnv(pathJSON)
+    } else if(fs.existsSync(pathJS) && fs.statSync(pathJS).isFile()) {
+      setEnv(pathJS)
+    }
+  }
 }
 
 // 版本
@@ -27,7 +50,8 @@ program
   .option('-R, --root <root>', 'set root direction')
   .description('启动服务器')
   .action(({ root }) => {
-    exportEnvRoot(root)
+    const ROOT_PATH = exportEnvRoot(root)
+    exportEnvConfig(ROOT_PATH)
     require('../scripts/server')()
   })
 

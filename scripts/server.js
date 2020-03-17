@@ -1,5 +1,4 @@
 const http = require('http');
-const fs = require('fs');
 const { 
   getIP,
   getPort, 
@@ -7,6 +6,7 @@ const {
 } = require('../lib/utils');
 const { HostNotFound } = require('../lib/context')
 const includeMiddleware = require('../middleware/include');
+const configMiddleware = require('../middleware/config');
 const IP = getIP();
 
 const createServer = (port, options) => http.createServer((req, res)=>{
@@ -16,6 +16,7 @@ const createServer = (port, options) => http.createServer((req, res)=>{
     const send = require('../lib/Send')(req, res);
     // 为router注册中间件
     router.registerMiddleware(includeMiddleware)
+    router.registerMiddleware(configMiddleware)
 
     let timeout_fn = null;
     Promise.race([ router.render(), new Promise(function(_, reject) {
@@ -48,7 +49,7 @@ const createServer = (port, options) => http.createServer((req, res)=>{
 
 module.exports = (options) => getPort().then(port => {
   createServer(port, options)
-  browse(port)
+  // browse(port)
 })
 
 
