@@ -42,7 +42,8 @@ const belongHtml = function (html) {
 
 function IncludeMiddleware (){}
 
-IncludeMiddleware.prototype.onRender = function( html, context ){
+IncludeMiddleware.prototype.onRender = function( html ){
+  const context = this
   if( html && _.isString(html) ){
     if( html.match(PLACEHOLDER_PATTERN) ){
       html = placeholderHtml.call( context.__app__, html );

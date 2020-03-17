@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-async function proxyHTML (html) {
+function proxyHTML (html) {
   const { proxy } = process.env.CONFIG
   console.log('proxy', proxy, process.env.CONFIG)
   return html
@@ -8,7 +8,8 @@ async function proxyHTML (html) {
 
 function ConfigMiddleware (){}
 
-ConfigMiddleware.prototype.onRender = async function( html, context ){
+ConfigMiddleware.prototype.onRender = function( html ){
+  const context = this
   if( html && _.isString(html) ){
     html = proxyHTML.call( context.__app__, html );
   }
