@@ -1,3 +1,4 @@
+## TODO
 [x] http 服务器
   [x] 指定路径 -R --root
 [] --watch 观察模式，类似 HMR 
@@ -10,5 +11,9 @@
 [] 内置 babel
 [] 插件的生命周期：注册模式，利用数组储存？
 [x] 流(Steam)改善内存使用？-> 针对图片
-[] 增加配置文件 .compose.config.js/.compose.config.json
-  [] 增加代理 proxy
+[] 配置增加代理 proxy，拦截请求，需要拦截 http 请求
+
+## ver 0.4.0
+[x] 增加配置文件 .compose.config.js/.compose.config.json
+  [x] 环境变量 env
+[x] --open 命令打开浏览器

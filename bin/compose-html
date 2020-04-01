@@ -48,11 +48,12 @@ program.version(base.version)
 program
   .command('start')
   .option('-R, --root <root>', 'set root direction')
+  .option('--open', 'open browser')
   .description('启动服务器')
-  .action(({ root }) => {
+  .action(({ root, open }) => {
     const ROOT_PATH = exportEnvRoot(root)
     exportEnvConfig(ROOT_PATH)
-    require('../scripts/server')()
+    require('../scripts/server')({ open })
   })
 
 program
