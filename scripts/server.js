@@ -48,8 +48,11 @@ const createServer = (port, options) => http.createServer((req, res)=>{
 });
 
 module.exports = (options) => getPort().then(port => {
+  const { open } = options;
   createServer(port, options)
-  // browse(port)
+  if (open) {
+    browse(port)
+  }
 })
 
 

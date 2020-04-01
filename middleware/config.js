@@ -1,9 +1,17 @@
 const _ = require('lodash');
 
-function proxyHTML (html) {
-  const { proxy } = process.env.CONFIG
-  console.log('proxy', proxy, process.env.CONFIG)
-  return html
+// 读取配置
+function getConfig() {
+  return JSON.parse(process.env.CONFIG)
+}
+
+// 仅对文本做简单替换
+// /{{([^}]+)?}}/g 不能匹配中间带有一个}的字符，例如 {{a}a}}
+function setEnvHTML (html) {
+  const config = getConfig()
+  const { env } = config;
+  const keys = Object.keys(env)
+  return keys.reduce((acc, key)=>acc.replace(`{{${key}}}`, env[key]), html)
 }
 
 function ConfigMiddleware (){}
@@ -11,7 +19,7 @@ function ConfigMiddleware (){}
 ConfigMiddleware.prototype.onRender = function( html ){
   const context = this
   if( html && _.isString(html) ){
-    html = proxyHTML.call( context.__app__, html );
+    html = setEnvHTML.call( context.__app__, html );
   }
   return html
 }
