@@ -2,13 +2,14 @@ const _ = require('lodash');
 
 // 读取配置
 function getConfig() {
-  return JSON.parse(process.env.CONFIG)
+  return process.env.CONFIG && JSON.parse(process.env.CONFIG)
 }
 
 // 仅对文本做简单替换
 // /{{([^}]+)?}}/g 不能匹配中间带有一个}的字符，例如 {{a}a}}
 function setEnvHTML (html) {
   const config = getConfig()
+  if (!config) return html;
   const { env } = config;
   const keys = Object.keys(env)
   return keys.reduce((acc, key)=>acc.replace(`{{${key}}}`, env[key]), html)
