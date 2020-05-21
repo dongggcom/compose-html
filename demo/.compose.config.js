@@ -1,3 +1,4 @@
+const package = require('../package.json')
 module.exports = {
   proxy: {
     '/test': {
@@ -6,7 +7,7 @@ module.exports = {
     }
   },
   env: {
-    VERSION: 0.1,
+    VERSION: package.version,
     NAME: 'demo',
   }
 }
