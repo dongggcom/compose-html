@@ -1,3 +1,8 @@
+/**
+ * 读取执行目录下的配置文件
+ * .compose.config.js 或 .compose.config.json
+ */
+
 const _ = require('lodash');
 
 // 读取配置

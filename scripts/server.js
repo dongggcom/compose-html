@@ -9,11 +9,11 @@ const includeMiddleware = require('../middleware/include');
 const configMiddleware = require('../middleware/config');
 const IP = getIP();
 
-const createServer = (port, options) => http.createServer((req, res)=>{
+const createServer = (port, options) => http.createServer((incomingMsg, res)=>{
 
-  function running() {
-    const router = require('../lib/Router')(req, options);
-    const send = require('../lib/Send')(req, res);
+  function render_req_html() {
+    const router = require('../lib/Router')(incomingMsg, options);
+    const send = require('../lib/Send')(incomingMsg, res);
     // 为router注册中间件
     router.registerMiddleware(includeMiddleware)
     router.registerMiddleware(configMiddleware)
@@ -41,7 +41,21 @@ const createServer = (port, options) => http.createServer((req, res)=>{
     }, 3000);
   }
 
-  running()
+  // 路由分发
+  function router(r) {
+    const url = new URL(incomingMsg.url, `http://${incomingMsg.headers.host}`)
+    const { pathname } = url;
+
+    const pattern = new RegExp(r)
+    if (pattern.test(pathname)) {
+      require('../router')(pathname, incomingMsg, res)
+    } else {
+      render_req_html()
+    }
+  }
+
+  // 注册路由
+  router('/router')
 
 }).listen(port, ()=>{
   console.log(`server start: http://${IP}:${port}`)
