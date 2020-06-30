@@ -37,3 +37,9 @@ _.set(routers, 'parent.child',
   }
 )
 
+// json 样例
+_.set(routers, 'jsonp', 
+  function(incomingMsg, res) {
+    require('./jsonp')(incomingMsg, res)
+  }
+)
