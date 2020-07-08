@@ -3,7 +3,7 @@ const fs = require('fs')
 const { writeFile, existsSync, mkdirSync, unlinkSync, rmdirSync } = fs
 const { getRootPath, parseItem, memorizeDirReadList, isImgFile } = require('../lib/utils')
 const includeMiddleware  = require('../middleware/include')
-const router = require('../lib/Router')()
+const router = require('../lib/HtmlRouter')()
 const rootPath = getRootPath()
 
 // include 中间件

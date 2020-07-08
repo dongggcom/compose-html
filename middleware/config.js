@@ -16,8 +16,11 @@ function setEnvHTML (html) {
   const config = getConfig()
   if (!config) return html;
   const { env } = config;
-  const keys = Object.keys(env)
-  return keys.reduce((acc, key)=>acc.replace(`{{${key}}}`, env[key]), html)
+  if (env) {
+    const keys = Object.keys(env)
+    return keys.reduce((acc, key)=>acc.replace(`{{${key}}}`, env[key]), html)
+  }
+  return html;
 }
 
 function ConfigMiddleware (){}

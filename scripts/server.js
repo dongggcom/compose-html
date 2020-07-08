@@ -12,7 +12,7 @@ const IP = getIP();
 const createServer = (port, options) => http.createServer((incomingMsg, res)=>{
 
   function render_req_html() {
-    const router = require('../lib/Router')(incomingMsg, options);
+    const router = require('../lib/HtmlRouter')(incomingMsg, options);
     const send = require('../lib/Send')(incomingMsg, res);
     // 为router注册中间件
     router.registerMiddleware(includeMiddleware)
@@ -48,13 +48,13 @@ const createServer = (port, options) => http.createServer((incomingMsg, res)=>{
 
     const pattern = new RegExp(r)
     if (pattern.test(pathname)) {
-      require('../router')(pathname, incomingMsg, res)
+      require('../router')(pathname, incomingMsg, res, r)
     } else {
       render_req_html()
     }
   }
 
-  // 注册路由
+  // example. 注册路由
   router('/router')
 
 }).listen(port, ()=>{
