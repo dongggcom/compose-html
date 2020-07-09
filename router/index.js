@@ -8,8 +8,9 @@
 const _ = require('lodash');
 const { Response } = require('../lib/context');
 
-module.exports = (router, incomingMsg, res) => {
-  const func = router.replace(/^\/router\//, '').replace('/', '.')
+module.exports = (route, incomingMsg, res, routerBase) => {
+  const pattern = new RegExp(routerBase + '/')
+  const func = route.replace(pattern, '').replace('/', '.')
   const routerFunc = _.get(routers, func)
   if (routerFunc && _.isFunction(routerFunc)) {
     routerFunc(incomingMsg, res)

@@ -42,6 +42,10 @@ function exportEnvConfig(path) {
   }
 }
 
+function init () {
+  console.clear() 
+}
+
 // 版本
 program.version(base.version)
 
@@ -51,6 +55,8 @@ program
   .option('--open', 'open browser')
   .description('启动服务器')
   .action(({ root, open }) => {
+    init()
+
     const ROOT_PATH = exportEnvRoot(root)
     exportEnvConfig(ROOT_PATH)
     require('../scripts/server')({ open })
@@ -62,6 +68,8 @@ program
   .option('--output <output>', 'build files')
   .description('编译文件')
   .action(({ output, root }) => {
+    init()
+
     const ROOT_PATH = exportEnvRoot(root)
     const OUTPUT_PATH = exportEnvOutput(output)
     require('../scripts/build')({ output: OUTPUT_PATH, root: ROOT_PATH })
