@@ -9,7 +9,7 @@ const PLACEHOLDER_PATTERN = /@\[\s*placeholder\s*\]/g;
 // TODO: @for @if @else @break;
 
 const placeholderHtml = function (html, placeholder) {
-  const c = new RegExp(PLACEHOLDER_PATTERN).exec(html)
+  const c = PLACEHOLDER_PATTERN.exec(html)
   if (c) {
     if( placeholder ){
       return html.replace(c[0], placeholder)
@@ -21,13 +21,12 @@ const placeholderHtml = function (html, placeholder) {
 
 // 动态引入 include 文件
 const includeHtml = function (html) {
-  const c = new RegExp(INCLUDE_PATTERN).exec(html)
-  if (c) {
+  let c;
+  while((c = INCLUDE_PATTERN.exec(html)) != null) {
     const includePath = resolve(this.rootpath, c[2])
-    // TODO: 异步可能会导致不能加载
     const include = this.store.get(includePath)
     if (include) {
-      return html.replace(c[0], include)
+      html = html.replace(c[0], include)
     }
   }
   return html;
