@@ -1,5 +1,6 @@
 const { resolve } = require('path')
 const fs = require('fs')
+const fse = require('fs-extra')
 const { writeFile, existsSync, mkdirSync, unlinkSync, rmdirSync } = fs
 const { getRootPath, parseItem, memorizeDirReadList, isImgFile } = require('../lib/utils')
 const includeMiddleware  = require('../middleware/include')
@@ -43,7 +44,6 @@ const delDir = function(path) {
       })
       .then(dirs => dirs.map(d => rmdirSync(d)))
       .then(()=>rmdirSync(path))
-      .then(()=>resolve())
       .catch(err=>console.warn(`delete direction in error: ${err}`))
   })
 }
@@ -51,44 +51,31 @@ const delDir = function(path) {
 module.exports = ({ output, root }) => {
   const fn = () => 
     router.routeAll(root)
-      .then(({ list, dirs }) => {
+      .then(({ list }) => {
         const _replaceRootpath = (_path, _rootPath, _output) => resolve(_output, _path.replace(_rootPath, './'))
         const _root = root || rootPath
-        dirs.forEach(p => mkDir(_replaceRootpath(p, _root, output)))
-        return list.map(v => {
+
+        list.map((v) => {
           const { path } = parseItem(v)
           const outputPath = _replaceRootpath(path, _root, output)
-          if(isImgFile(outputPath)){
-            return { [outputPath]: fs.createReadStream(path) }
-          }else{
-            const html = router.render(path)
-            return { [outputPath]: html }
+
+          if (isImgFile(outputPath)) {
+            fse.outputFileSync(outputPath, '', err => err && console.warn(`Output ${outputPath} fail!`, err))
+            let readStream = fs.createReadStream(path)
+            let writeStream = fs.createWriteStream(outputPath)
+            readStream.pipe(writeStream)
+          } else {
+            router.render(path).then(html => fse.outputFile(outputPath, html, err => err && console.log(err)))
           }
         })
       })
-      .then((list) => {
-        list.forEach( async (v) => {
-          const { path: outputPath, value } = parseItem(v)
-          const needBinary = isImgFile(outputPath)
-          if( needBinary ){
-            let readStream = value
-            let writeStream = fs.createWriteStream(outputPath)
-            readStream.pipe(writeStream)
-          }else {
-            const html = await value;
-            writeFile(outputPath, html, (err) => {
-              if (err) {
-                console.trace(err)
-              } 
-            })  
-          }
-        })
-
-      }).catch(err=>console.warn(`read direction in error: ${err}`))
+      .then(() => console.log(`\n\r>>> Build success! output: ${output}\n\r`))
+      .catch(err => console.warn('Build fail!', err))
   if (output) {
     async function run(){
-      await delDir(output)
-      await mkDir(output)
+      // await delDir(output)
+      // await mkDir(output)
+      await fse.emptyDir(output, err => err && console.error(`Delete ${output} fail!`, err))
       await fn()
     }
     run()
