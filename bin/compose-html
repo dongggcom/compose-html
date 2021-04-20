@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 'use strict'
-
 const { getRootPath, getDirectSplit } = require('../lib/utils')
 const path = require('path');
 const fs = require('fs');
