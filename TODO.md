@@ -26,9 +26,3 @@
 
 [] 非图片的二进制文件支持
 
-## FIX
-[] 渲染页面异常
-
-[] include 异常
-
-[] 对 package.json 与 favicon.ico 的依赖
