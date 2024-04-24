@@ -81,8 +81,8 @@ const createServer = (port, options) => http.createServer((incomingMsg, res)=>{
         console.log('source send error', e)
       }
 
-    }, () => {
-      send.success(HostNotFound)
+    }, (e) => {
+      send.success(e.message || HostNotFound)
     })
 
     // 超时响应
