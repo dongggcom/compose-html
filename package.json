@@ -1,6 +1,6 @@
 {
   "name": "compose-html",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "compose html by node ",
   "main": "index.js",
   "bin": "./bin/compose-html",
